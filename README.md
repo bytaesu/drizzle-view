@@ -1,4 +1,4 @@
-![demo](https://github.com/user-attachments/assets/dc895770-5e85-4de1-8e60-0a1a88c5bbb7)
+![demo](https://github.com/user-attachments/assets/d0a59505-5739-4eb2-865a-6a07a6e283ec)
 
 # `drizzle-view`
 
