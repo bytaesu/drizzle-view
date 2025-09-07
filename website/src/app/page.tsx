@@ -76,7 +76,7 @@ const HowToUse = () => {
 `;
 
   const projectScriptCode = `"scripts": {
-  "db:view": "concurrently \"pnpm drizzle-kit studio\" \"pnpm drizzle-lab visualizer\""
+  "db:view": "concurrently \\"pnpm drizzle-kit studio\\" \\"pnpm drizzle-lab visualizer\\""
 }
 `;
 
