@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "pnpm run dev",
     "build": "pnpm run build:view && pnpm run build:cli",
+    "build:website": "pnpm --filter website build",
     "build:view": "pnpm --filter @drizzle-view/view build",
     "build:cli": "pnpm --filter drizzle-view build",
     "lint": "biome check",
