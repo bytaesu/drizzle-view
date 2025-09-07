@@ -48,7 +48,6 @@ yarn-error.log*
 next-env.d.ts
 
 # Go files
-go.sum
 vendor/
 
 # IDE files
