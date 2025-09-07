@@ -92,7 +92,7 @@ jobs:
 
       - name: Publish to npm
         working-directory: ./packages/cli
-        run: pnpm publish --access public
+        run: pnpm publish --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
