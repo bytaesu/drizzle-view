@@ -31,16 +31,16 @@ yarn global add drizzle-view
 
   return (
     <BackgroundBeamsWithCollision className="py-32 px-6">
-      <div className="flex flex-col-reverse lg:flex-row lg:items-end items-center justify-center gap-12 max-w-5xl">
-        {/* 텍스트 영역 */}
-        <div className="flex-1 text-center md:text-left">
+      <div className="flex flex-col-reverse lg:flex-row lg:items-end items-center justify-center gap-12 max-w-5xl mx-auto w-full">
+        {/* Text */}
+        <div className="flex-1 text-center lg:text-left w-full min-w-0">
           <p className="text-sm sm:text-base text-muted-foreground">
             What is stopping you from trying this?
           </p>
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight mt-4">
             Drizzle View
           </h1>
-          <p className="text-base sm:text-lg md:text-2xl lg:text-3xl text-pretty mt-4 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-xl mx-auto">
+          <p className="text-base sm:text-lg md:text-2xl lg:text-3xl text-pretty mt-4 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-xl mx-auto lg:mx-0">
             Run{" "}
             <span className="underline underline-offset-2">Drizzle Studio</span>{" "}
             and{" "}
@@ -49,18 +49,21 @@ yarn global add drizzle-view
             </span>{" "}
             together in one view
           </p>
-          <CodeBlock
-            language="sh"
-            value={installCode}
-            className="max-w-lg mt-8"
-          />
+          <div className="mt-8 w-full max-w-lg mx-auto lg:mx-0">
+            <CodeBlock
+              language="sh"
+              value={installCode}
+              className="w-full overflow-x-auto"
+            />
+          </div>
         </div>
 
-        <div className="flex-1">
+        {/* Image */}
+        <div className="flex-1 w-full max-w-xs lg:max-w-lg">
           <img
             src="/images/demo.gif"
             alt="Drizzle View demo"
-            className="w-full h-auto rounded-lg shadow-lg max-w-xs sm:max-w-md"
+            className="w-full h-auto rounded-lg shadow-lg"
           />
         </div>
       </div>
