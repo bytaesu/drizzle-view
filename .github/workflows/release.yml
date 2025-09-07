@@ -1,0 +1,110 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.24"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build all packages
+        run: pnpm run build
+
+      - name: Build Go binaries for release
+        working-directory: ./packages/cli
+        run: |
+          mkdir -p release
+
+          # Build for different platforms  
+          platforms=(
+            "windows/amd64"
+            "windows/arm64"
+            "darwin/amd64" 
+            "darwin/arm64"
+            "linux/amd64"
+            "linux/arm64"
+          )
+
+          for platform in "${platforms[@]}"; do
+            platform_split=(${platform//\// })
+            GOOS=${platform_split[0]}
+            GOARCH=${platform_split[1]}
+            
+            output_name="drizzle-view-${GOOS}-${GOARCH}"
+            if [ $GOOS = "windows" ]; then
+              output_name+='.exe'
+            fi
+            
+            echo "Building for $GOOS/$GOARCH..."
+            env GOOS=$GOOS GOARCH=$GOARCH go build -ldflags='-s -w' -o release/$output_name main.go
+          done
+
+      # tar.gz archive for Homebrew
+      - name: Create Homebrew archives
+        working-directory: ./packages/cli
+        run: |
+          mkdir -p homebrew-releases
+
+          # Archive for macOS
+          tar -czf homebrew-releases/drizzle-view-darwin-amd64.tar.gz -C release drizzle-view-darwin-amd64
+          tar -czf homebrew-releases/drizzle-view-darwin-arm64.tar.gz -C release drizzle-view-darwin-arm64
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          files: |
+            packages/cli/release/*
+            packages/cli/homebrew-releases/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to npm
+        working-directory: ./packages/cli
+        run: pnpm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # Update Homebrew Formula
+      - name: Update Homebrew Formula
+        uses: mislav/bump-homebrew-formula-action@v3
+        with:
+          formula-name: drizzle-view
+          homebrew-tap: bytaesu/homebrew-tap-drizzle-view
+          download-url: "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/drizzle-view-darwin-amd64.tar.gz"
+          commit-message: |
+            drizzle-view ${{ github.ref_name }}
+
+            Updated by GitHub Actions
+        env:
+          COMMITTER_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}

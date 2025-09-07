@@ -1,14 +1,20 @@
-![demo](https://github.com/user-attachments/assets/d0a59505-5739-4eb2-865a-6a07a6e283ec)
-
-# `drizzle-view`
+# Drizzle View
 
 Run Drizzle Studio and Drizzle Visualizer together in one view.
 
-I noticed that Drizzle v1 will soon be released, and hopefully these local tools will be integrated directly into Drizzle Studio in the future.
+![demo](https://github.com/user-attachments/assets/d0a59505-5739-4eb2-865a-6a07a6e283ec)
 
-## Installation & Usage
+## Installation
 
-### Inside a project using drizzle-orm
+```bash
+npm install -g drizzle-view
+# or
+pnpm add -g drizzle-view
+# or
+yarn global add drizzle-view
+```
+
+## Inside a project using drizzle-orm
 
 **Install required packages:**
 
@@ -30,20 +36,30 @@ pnpm add -D drizzle-kit drizzle-lab concurrently
 pnpm db:view
 ```
 
-### Get drizzle-view
+## Usage
 
+```bash
+# Basic usage (default ports)
+drizzle-view
+
+# Custom URLs
+drizzle-view --studio=http://localhost:1234 --visualizer=http://localhost:5678 --port=3333
+
+# Help
+drizzle-view --help
 ```
-git clone https://github.com/bytaesu/drizzle-view
-cd drizzle-view
 
-pnpm install
-pnpm dev
-```
+### Options
 
-**Open 👉 http://localhost:3333**
+- `--studio <url>`: Drizzle Studio URL (default: http://local.drizzle.studio)
+- `--visualizer <url>`: Drizzle Visualizer URL (default: http://localhost:64738)
+- `--port <port>`: Web interface port (default: 3333)
+- `--help`: Show help## Features
 
-Enjoy!
+## Requirements
 
-## Limitation
+- Running Drizzle Studio, Drizzle Visualizer instances
 
-As both views are embedded in iframes, custom theme is currently unsupported.
+## License
+
+MIT

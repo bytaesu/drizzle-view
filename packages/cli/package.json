@@ -1,0 +1,35 @@
+{
+  "name": "drizzle-view",
+  "version": "0.0.1",
+  "description": "Run Drizzle Studio and Drizzle Visualizer together in one view",
+  "main": "index.js",
+  "bin": {
+    "drizzle-view": "./drizzle-view.js"
+  },
+  "scripts": {
+    "build": "npm run copy:web && npm run build:go",
+    "build:go": "go build -ldflags='-s -w' -o bin/drizzle-view-$(node -e \"console.log(process.platform)\")-$(node -e \"console.log(process.arch)\") main.go",
+    "copy:web": "cp -r ../view/out ./"
+  },
+  "files": [
+    "drizzle-view.js",
+    "index.js"
+  ],
+  "keywords": [
+    "drizzle",
+    "drizzle-studio",
+    "drizzle-visualizer",
+    "database",
+    "cli"
+  ],
+  "author": "bytaesu",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bytaesu/drizzle-view.git"
+  },
+  "homepage": "https://drizzle-view.vercel.app",
+  "publishConfig": {
+    "access": "public"
+  }
+}
