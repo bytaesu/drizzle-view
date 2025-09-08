@@ -75,7 +75,6 @@ pnpm add -g drizzle-view
 # yarn
 yarn global add drizzle-view
 `;
-  const drizzleViewRunCode = `drizzle-view`;
 
   return (
     <section className="py-18 px-6 bg-gradient-to-b from-background/50 to-background/0 max-w-2xl mx-auto">
