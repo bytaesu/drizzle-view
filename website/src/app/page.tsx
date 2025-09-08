@@ -16,22 +16,9 @@ export default function Home() {
 }
 
 const Hero = () => {
-  const installCode = `# homebrew
-brew install bytaesu/homebrew-tap-drizzle-view/drizzle-view
-
-# npm
-npm install -g drizzle-view
-
-# pnpm
-pnpm add -g drizzle-view
-
-# yarn
-yarn global add drizzle-view
-`;
-
   return (
     <BackgroundBeamsWithCollision className="py-32 px-6">
-      <div className="flex flex-col-reverse lg:flex-row lg:items-end items-center justify-center gap-12 max-w-5xl mx-auto w-full">
+      <div className="flex flex-col-reverse lg:flex-row lg:items-center items-center justify-center gap-12 max-w-5xl mx-auto w-full">
         {/* Text */}
         <div className="flex-1 text-center lg:text-left w-full min-w-0">
           <p className="text-sm sm:text-base text-muted-foreground">
@@ -49,13 +36,6 @@ yarn global add drizzle-view
             </span>{" "}
             together in one view
           </p>
-          <div className="mt-8 w-full max-w-lg mx-auto lg:mx-0">
-            <CodeBlock
-              language="sh"
-              value={installCode}
-              className="w-full overflow-x-auto"
-            />
-          </div>
         </div>
 
         {/* Image */}
@@ -72,11 +52,11 @@ yarn global add drizzle-view
 };
 
 const HowToUse = () => {
-  const projectSetupCode = `pnpm add -D drizzle-kit drizzle-lab concurrently
+  const projectSetupCode = `pnpm add -D drizzle-kit concurrently
 `;
 
   const projectScriptCode = `"scripts": {
-  "db:view": "concurrently \\"pnpm drizzle-kit studio\\" \\"pnpm drizzle-lab visualizer\\""
+  "db:view": "concurrently \\"pnpm drizzle-kit studio\\" \\"pnpm dlx drizzle-lab visualizer\\" \\"sleep 1 && pnpm dlx drizzle-view\\""
 }
 `;
 
@@ -109,19 +89,20 @@ yarn global add drizzle-view
         <h3 className="text-2xl font-semibold mb-8">
           Inside a project using drizzle-orm
         </h3>
-        <p className="mb-2">Install required packages:</p>
+        <p className="mb-2">Install packages:</p>
         <CodeBlock language="sh" value={projectSetupCode} className="mb-8" />
         <p className="mb-2">
-          Add a script to your <code>package.json</code>:
+          Add a script to your <code className="text-sm">package.json</code>:
         </p>
         <CodeBlock language="json" value={projectScriptCode} className="mb-8" />
         <p className="mb-2">Run:</p>
         <CodeBlock language="sh" value={projectRunCode} className="mb-8" />
+        <p className="text-xl font-semibold">Enjoy🎉</p>
       </div>
 
       {/* Drizzle View Installation */}
       <div className="mb-16">
-        <h3 className="text-2xl font-semibold mb-4">Get Drizzle View</h3>
+        <h3 className="text-2xl font-semibold mb-4">Global Installation</h3>
         <p className="mb-2">
           Install{" "}
           <code className="p-1 rounded-md bg-muted text-sm">drizzle-view</code>{" "}
@@ -132,12 +113,6 @@ yarn global add drizzle-view
           value={drizzleViewInstallCode}
           className="mb-8"
         />
-        <p>
-          Run{" "}
-          <code className="p-1 rounded-md bg-muted text-sm">drizzle-view</code>
-        </p>
-        <CodeBlock language="sh" value={drizzleViewRunCode} className="mb-8" />
-        <p className="text-xl font-semibold">Enjoy🎉</p>
       </div>
 
       {/* Options */}
