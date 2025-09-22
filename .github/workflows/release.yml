@@ -32,38 +32,50 @@ jobs:
           run_install: false
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Build all packages
         run: pnpm run build
 
-      - name: Build Go binaries for release
+      # Build Go binaries for release
+      - name: Build Go binaries
         working-directory: ./packages/cli
         run: |
           mkdir -p release
 
-          # Build for different platforms  
           platforms=(
             "windows/amd64"
             "windows/arm64"
-            "darwin/amd64" 
+            "darwin/amd64"
             "darwin/arm64"
             "linux/amd64"
             "linux/arm64"
           )
 
           for platform in "${platforms[@]}"; do
-            platform_split=(${platform//\// })
-            GOOS=${platform_split[0]}
-            GOARCH=${platform_split[1]}
-            
-            output_name="drizzle-view-${GOOS}-${GOARCH}"
-            if [ $GOOS = "windows" ]; then
+            GOOS="${platform%/*}"
+            GOARCH="${platform#*/}"
+
+            case $GOOS in
+              windows) PLATFORM_NAME="win32" ;;
+              darwin) PLATFORM_NAME="darwin" ;;
+              linux) PLATFORM_NAME="linux" ;;
+              *) PLATFORM_NAME=$GOOS ;;
+            esac
+
+            case $GOARCH in
+              amd64) ARCH_NAME="x64" ;;
+              arm64) ARCH_NAME="arm64" ;;
+              *) ARCH_NAME=$GOARCH ;;
+            esac
+
+            output_name="drizzle-view-${PLATFORM_NAME}-${ARCH_NAME}"
+            if [ "$GOOS" = "windows" ]; then
               output_name+='.exe'
             fi
-            
-            echo "Building for $GOOS/$GOARCH..."
-            env GOOS=$GOOS GOARCH=$GOARCH go build -ldflags='-s -w' -o release/$output_name main.go
+
+            echo "Building $output_name..."
+            env GOOS=$GOOS GOARCH=$GOARCH CGO_ENABLED=0 go build -ldflags='-s -w' -o release/$output_name main.go
           done
 
       # tar.gz archive for Homebrew
@@ -71,9 +83,7 @@ jobs:
         working-directory: ./packages/cli
         run: |
           mkdir -p homebrew-releases
-
-          # Archive for macOS
-          tar -czf homebrew-releases/drizzle-view-darwin-amd64.tar.gz -C release drizzle-view-darwin-amd64
+          tar -czf homebrew-releases/drizzle-view-darwin-x64.tar.gz -C release drizzle-view-darwin-x64
           tar -czf homebrew-releases/drizzle-view-darwin-arm64.tar.gz -C release drizzle-view-darwin-arm64
 
       - name: Create GitHub Release
@@ -92,7 +102,7 @@ jobs:
 
       - name: Publish to npm
         working-directory: ./packages/cli
-        run: pnpm publish --access public --no-git-checks
+        run: pnpm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -102,7 +112,7 @@ jobs:
         with:
           formula-name: drizzle-view
           homebrew-tap: bytaesu/homebrew-tap-drizzle-view
-          download-url: "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/drizzle-view-darwin-amd64.tar.gz"
+          download-url: "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/drizzle-view-darwin-x64.tar.gz"
           commit-message: |
             drizzle-view ${{ github.ref_name }}
 
