@@ -1,6 +1,6 @@
 {
   "name": "drizzle-view",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Run Drizzle Studio and Drizzle Visualizer together in one view",
   "main": "index.js",
   "bin": {
