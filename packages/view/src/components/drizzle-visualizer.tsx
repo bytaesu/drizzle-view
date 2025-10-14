@@ -1,8 +1,19 @@
-const visualizerUrl =
-  process.env.NEXT_PUBLIC_DRIZZLE_VISUALIZER_URL || "http://localhost:64738";
+"use client";
+
+import { useConfig } from "@/hooks/use-config";
 
 const DrizzleVisualizer = () => {
-  return <iframe src={visualizerUrl} className="w-full h-full" />;
+  const { config, loading } = useConfig();
+
+  if (loading) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <p className="text-muted-foreground">Loading Visualizer...</p>
+      </div>
+    );
+  }
+
+  return <iframe src={config.visualizerUrl} className="w-full h-full" />;
 };
 
 export default DrizzleVisualizer;

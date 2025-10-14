@@ -1,8 +1,19 @@
-const studioUrl =
-  process.env.NEXT_PUBLIC_DRIZZLE_STUDIO_URL || "http://local.drizzle.studio";
+"use client";
+
+import { useConfig } from "@/hooks/use-config";
 
 const DrizzleStudio = () => {
-  return <iframe src={studioUrl} className="w-full h-full" />;
+  const { config, loading } = useConfig();
+
+  if (loading) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <p className="text-muted-foreground">Loading Studio...</p>
+      </div>
+    );
+  }
+
+  return <iframe src={config.studioUrl} className="w-full h-full" />;
 };
 
 export default DrizzleStudio;

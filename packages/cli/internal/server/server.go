@@ -3,7 +3,9 @@ package server
 import (
 	"context"
 	"embed"
+	"encoding/json"
 	"fmt"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -13,6 +15,12 @@ import (
 type Server struct {
 	DistFS  embed.FS
 	tempDir string
+}
+
+// Config represents the configuration returned to the frontend
+type Config struct {
+	StudioURL     string `json:"studioUrl"`
+	VisualizerURL string `json:"visualizerUrl"`
 }
 
 // New creates a new server instance
@@ -52,5 +60,21 @@ func (s *Server) Cleanup() {
 	if s.tempDir != "" {
 		os.RemoveAll(s.tempDir)
 		s.tempDir = ""
+	}
+}
+
+// HandleConfig returns the current configuration as JSON
+func (s *Server) HandleConfig(w http.ResponseWriter, r *http.Request) {
+	config := Config{
+		StudioURL:     os.Getenv("DRIZZLE_STUDIO_URL"),
+		VisualizerURL: os.Getenv("DRIZZLE_VISUALIZER_URL"),
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
+	if err := json.NewEncoder(w).Encode(config); err != nil {
+		http.Error(w, "Failed to encode config", http.StatusInternalServerError)
+		return
 	}
 }

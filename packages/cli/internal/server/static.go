@@ -10,6 +10,11 @@ import (
 )
 
 func (s *Server) serveStatic(ctx context.Context, distPath string, port int) error {
+	mux := http.NewServeMux()
+
+	// Handle API config endpoint
+	mux.HandleFunc("/api/config", s.HandleConfig)
+
 	// Create a custom handler to inject environment variables
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Handle index.html specially to inject environment variables
@@ -23,7 +28,6 @@ func (s *Server) serveStatic(ctx context.Context, distPath string, port int) err
 		fileServer.ServeHTTP(w, r)
 	})
 
-	mux := http.NewServeMux()
 	mux.Handle("/", handler)
 
 	server := &http.Server{
